@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [mediaType, setMediaType] = useState('image');
+  const [mediaType, setMediaType] = useState('image'); 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -22,8 +22,10 @@ export default function Home() {
     formData.append("file", selectedFile);
 
     try {
-      // Direct base URL par POST request
-      const res = await fetch("https://deepshield-backend-0kr6.onrender.com", {
+      
+      const endpoint = `https://deepshield-backend-0kr6.onrender.com/analyze/${mediaType}`;
+
+      const res = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });
@@ -33,11 +35,10 @@ export default function Home() {
       }
 
       const data = await res.json();
-      console.log("Backend response data:", data); 
       setResult(data);
     } catch (error) {
       console.error(error);
-      alert("Error analyzing file! Make sure Render backend is running.");
+      alert("Error analyzing file! Make sure Render backend is active.");
     } finally {
       setLoading(false);
     }
@@ -66,11 +67,11 @@ export default function Home() {
 
         {result && (
           <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#020617', borderRadius: '8px', border: '1px solid #334155' }}>
-            <h3 style={{ color: (result.authenticity_score ?? result.score ?? result.confidence ?? 0) > 70 ? '#4ade80' : '#f87171' }}>
-              Status: {result.status || result.result || "Analyzed"}
+            <h3 style={{ color: result.authenticity_score > 75 ? '#4ade80' : '#f87171' }}>
+              Status: {result.status}
             </h3>
-            <p>Authenticity Score: <strong>{result.authenticity_score ?? result.score ?? result.confidence ?? 0}%</strong></p>
-            {result.details && <p style={{ color: '#94a3b8', fontSize: '14px' }}>{result.details}</p>}
+            <p>Authenticity Score: <strong>{result.authenticity_score}%</strong></p>
+            <p style={{ color: '#94a3b8', fontSize: '14px' }}>{result.details}</p>
           </div>
         )}
       </main>
