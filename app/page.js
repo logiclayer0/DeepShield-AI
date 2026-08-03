@@ -22,9 +22,8 @@ export default function Home() {
     formData.append("file", selectedFile);
 
     try {
-      const endpoint = `https://deepshield-backend-0kr6.onrender.com/analyze-${mediaType}`; 
-      
-      const res = await fetch(endpoint, {
+      // Direct base URL par POST request
+      const res = await fetch("https://deepshield-backend-0kr6.onrender.com/", {
         method: "POST",
         body: formData,
       });
@@ -34,6 +33,7 @@ export default function Home() {
       }
 
       const data = await res.json();
+      console.log("Backend response data:", data); // Debugging ke liye
       setResult(data);
     } catch (error) {
       console.error(error);
@@ -66,12 +66,11 @@ export default function Home() {
 
         {result && (
           <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#020617', borderRadius: '8px', border: '1px solid #334155' }}>
-            {/* 💡 FIX 2: Check kar rahe hain ki data sahi key name se aa raha hai ya nahi */}
-            <h3 style={{ color: (result.authenticity_score || result.score || 0) > 70 ? '#4ade80' : '#f87171' }}>
-              Status: {result.status || "Completed"}
+            <h3 style={{ color: (result.authenticity_score ?? result.score ?? result.confidence ?? 0) > 70 ? '#4ade80' : '#f87171' }}>
+              Status: {result.status || result.result || "Analyzed"}
             </h3>
-            <p>Authenticity Score: <strong>{result.authenticity_score ?? result.score ?? 0}%</strong></p>
-            <p style={{ color: '#94a3b8', fontSize: '14px' }}>{result.details || result.message}</p>
+            <p>Authenticity Score: <strong>{result.authenticity_score ?? result.score ?? result.confidence ?? 0}%</strong></p>
+            {result.details && <p style={{ color: '#94a3b8', fontSize: '14px' }}>{result.details}</p>}
           </div>
         )}
       </main>
