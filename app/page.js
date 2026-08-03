@@ -23,7 +23,7 @@ export default function Home() {
 
     try {
       // Direct base URL par POST request
-      const res = await fetch("https://deepshield-backend-0kr6.onrender.com/", {
+      const res = await fetch("https://deepshield-backend-0kr6.onrender.com", {
         method: "POST",
         body: formData,
       });
@@ -33,7 +33,7 @@ export default function Home() {
       }
 
       const data = await res.json();
-      console.log("Backend response data:", data); // Debugging ke liye
+      console.log("Backend response data:", data); 
       setResult(data);
     } catch (error) {
       console.error(error);
