@@ -22,7 +22,7 @@ export default function Home() {
     formData.append("file", selectedFile);
 
     try {
-      const res = await fetch(`https://deepshield-backend-0kr6.onrender.com/analyze/${mediaType}`, {
+      const res = await fetch(`https://deepshield-backend-0kr6.onrender.com/analyze/`, {
         method: "POST",
         body: formData,
       });
